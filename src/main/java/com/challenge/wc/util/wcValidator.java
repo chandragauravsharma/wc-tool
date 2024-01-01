@@ -9,7 +9,7 @@ public class wcValidator {
         if (!strs[0].equals("ccwc")) {
             return false;
         }
-        if (strs[1].charAt(0) != '-') {
+        if (strs.length > 2 && strs[1].charAt(0) != '-') {
             return false;
         }
 
