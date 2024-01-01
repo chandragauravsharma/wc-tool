@@ -18,6 +18,19 @@ public class wcExecutor {
         if (command.getOptions()[0] == 'c') {
             long totalBytes = getTotalBytesCount(command.getInputFile());
             System.out.println(totalBytes);
+        } else if (command.getOptions()[0] == 'l') {
+            long totalLines = getTotalLinesCount(command.getInputFile());
+            System.out.println(totalLines);
+        }
+    }
+
+    private long getTotalLinesCount(String inputFile) {
+        String filePth = "src/main/resources/com/challenge/wc/" + inputFile;
+        try {
+            Path path = Paths.get(filePth);
+            return Files.lines(path).count();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
