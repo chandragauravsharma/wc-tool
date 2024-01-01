@@ -16,14 +16,31 @@ public class wcExecutor {
 
     public void executeCommand() {
         if (command.getOptions()[0] == 'c') {
+            // total bytes
             long totalBytes = getTotalBytesCount(command.getInputFile());
             System.out.println(totalBytes);
         } else if (command.getOptions()[0] == 'l') {
+            // total lines
             long totalLines = getTotalLinesCount(command.getInputFile());
             System.out.println(totalLines);
         } else if (command.getOptions()[0] == 'w') {
+            // total words
             long totalWords = getTotalWordsCount(command.getInputFile());
             System.out.println(totalWords);
+        } else if (command.getOptions()[0] == 'm') {
+            // total characters
+            long totalCharacters = getTotalCharactersCount(command.getInputFile());
+            System.out.println(totalCharacters);
+        }
+    }
+
+    private long getTotalCharactersCount(String inputFile) {
+        String filePth = "src/main/resources/com/challenge/wc/" + inputFile;
+        try {
+            Path path = Paths.get(filePth);
+            return Files.readString(path).length();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -55,7 +72,7 @@ public class wcExecutor {
         String filePth = "src/main/resources/com/challenge/wc/" + inputFile;
         try {
             Path path = Paths.get(filePth);
-            return Files.size(path);
+            return Files.readAllBytes(path).length;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
