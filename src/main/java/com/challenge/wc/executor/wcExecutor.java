@@ -15,39 +15,63 @@ public class wcExecutor {
     }
 
     public void executeCommand() {
-        if (command.getOptions()[0] == 'c') {
-            // total bytes
-            long totalBytes = getTotalBytesCount(command.getInputFile());
-            System.out.println(totalBytes);
-        } else if (command.getOptions()[0] == 'l') {
-            // total lines
-            long totalLines = getTotalLinesCount(command.getInputFile());
-            System.out.println(totalLines);
-        } else if (command.getOptions()[0] == 'w') {
-            // total words
-            long totalWords = getTotalWordsCount(command.getInputFile());
-            System.out.println(totalWords);
-        } else if (command.getOptions()[0] == 'm') {
-            // total characters
-            long totalCharacters = getTotalCharactersCount(command.getInputFile());
-            System.out.println(totalCharacters);
+        String filePath = getFilePath(command.getInputFile());
+        switch (command.getOption()) {
+            case "c":
+                // total bytes
+                long totalBytes = getTotalBytesCount(filePath);
+                System.out.println(totalBytes);
+                break;
+            case "l":
+                // total lines
+                long totalLines = getTotalLinesCount(filePath);
+                System.out.println(totalLines);
+                break;
+            case "w":
+                // total words
+                long totalWords = getTotalWordsCount(filePath);
+                System.out.println(totalWords);
+                break;
+            case "m":
+                // total characters
+                long totalCharacters = getTotalCharactersCount(filePath);
+                System.out.println(totalCharacters);
+                break;
+            case "":
+                // default case
+                System.out.println(executeDefaultCase(filePath, command.getInputFile()));
+                break;
+            default:
+                throw new RuntimeException("Invalid option");
         }
     }
 
-    private long getTotalCharactersCount(String inputFile) {
-        String filePth = "src/main/resources/com/challenge/wc/" + inputFile;
+    private String executeDefaultCase(String filePath, String fileName) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getTotalLinesCount(filePath) + " ");
+        sb.append(getTotalWordsCount(filePath) + " ");
+        sb.append(getTotalBytesCount(filePath) + " ");
+        sb.append(fileName);
+
+        return sb.toString();
+    }
+
+    private String getFilePath(String fileName) {
+        return "src/main/resources/com/challenge/wc/" + fileName;
+    }
+
+    private long getTotalCharactersCount(String filePath) {
         try {
-            Path path = Paths.get(filePth);
+            Path path = Paths.get(filePath);
             return Files.readString(path).length();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private long getTotalWordsCount(String inputFile) {
-        String filePth = "src/main/resources/com/challenge/wc/" + inputFile;
+    private long getTotalWordsCount(String filePath) {
         try {
-            Path path = Paths.get(filePth);
+            Path path = Paths.get(filePath);
             return Files.readAllLines(path, java.nio.charset.StandardCharsets.UTF_8)
                     .stream().flatMap(line -> java.util.Arrays.stream(line.split("\\s+")))
                     .filter(word -> !word.isEmpty())
@@ -58,20 +82,18 @@ public class wcExecutor {
         }
     }
 
-    private long getTotalLinesCount(String inputFile) {
-        String filePth = "src/main/resources/com/challenge/wc/" + inputFile;
+    private long getTotalLinesCount(String filePath) {
         try {
-            Path path = Paths.get(filePth);
+            Path path = Paths.get(filePath);
             return Files.lines(path).count();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private long getTotalBytesCount(String inputFile) {
-        String filePth = "src/main/resources/com/challenge/wc/" + inputFile;
+    private long getTotalBytesCount(String filePath) {
         try {
-            Path path = Paths.get(filePth);
+            Path path = Paths.get(filePath);
             return Files.readAllBytes(path).length;
         } catch (IOException e) {
             throw new RuntimeException(e);

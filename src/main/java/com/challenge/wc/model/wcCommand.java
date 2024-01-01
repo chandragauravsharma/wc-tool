@@ -2,12 +2,12 @@ package com.challenge.wc.model;
 
 public class wcCommand {
     String coreCommand;
-    Character[] options;
+    String option;
     String inputFile;
 
-    public wcCommand(String coreCommand, Character[] options, String inputFile) {
+    public wcCommand(String coreCommand, String option, String inputFile) {
         this.coreCommand = coreCommand;
-        this.options = options;
+        this.option = option;
         this.inputFile = inputFile;
     }
 
@@ -15,8 +15,8 @@ public class wcCommand {
         return coreCommand;
     }
 
-    public Character[] getOptions() {
-        return options;
+    public String getOption() {
+        return option;
     }
 
     public String getInputFile() {
