@@ -21,6 +21,23 @@ public class wcExecutor {
         } else if (command.getOptions()[0] == 'l') {
             long totalLines = getTotalLinesCount(command.getInputFile());
             System.out.println(totalLines);
+        } else if (command.getOptions()[0] == 'w') {
+            long totalWords = getTotalWordsCount(command.getInputFile());
+            System.out.println(totalWords);
+        }
+    }
+
+    private long getTotalWordsCount(String inputFile) {
+        String filePth = "src/main/resources/com/challenge/wc/" + inputFile;
+        try {
+            Path path = Paths.get(filePth);
+            return Files.readAllLines(path, java.nio.charset.StandardCharsets.UTF_8)
+                    .stream().flatMap(line -> java.util.Arrays.stream(line.split("\\s+")))
+                    .filter(word -> !word.isEmpty())
+                    .filter(word -> !word.isBlank())
+                    .count();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
