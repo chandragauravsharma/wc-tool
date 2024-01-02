@@ -2,28 +2,28 @@ package com.challenge.wc;
 
 import com.challenge.wc.executor.wcExecutor;
 import com.challenge.wc.model.wcCommand;
+import com.challenge.wc.util.wcConstants;
 import com.challenge.wc.util.wcParser;
-import com.challenge.wc.util.wcValidator;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class wcMain {
     public static void main(String[] args) {
-        System.out.println("Input your command... e.g. [ccwc -c test.txt]");
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            String input = br.readLine();
-            if (wcValidator.validateInputCommand(input)) {
-                wcCommand tokenizedCommand = wcParser.parserInputCommand(input);
-                wcExecutor wcExecutor = new wcExecutor(tokenizedCommand);
-                wcExecutor.executeCommand();
-            } else {
-                System.out.println("Wrong command. Please check");
+        wcCommand tokenizedCommand = wcParser.parseInputCommand(args);
+        InputStream inputStream;
+        if (tokenizedCommand.getInputFile() == null) {
+            // piped input, no file provided in command
+            inputStream = System.in;
+        } else {
+            try {
+                inputStream = Files.newInputStream(Path.of(wcConstants.FILE_RESOURCE_PATH + tokenizedCommand.getInputFile()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
+        wcExecutor wcExecutor = new wcExecutor(tokenizedCommand.getOption(), inputStream, tokenizedCommand.getInputFile());
+        wcExecutor.executeCommand();
     }
 }

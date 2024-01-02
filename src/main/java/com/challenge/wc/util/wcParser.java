@@ -3,25 +3,34 @@ package com.challenge.wc.util;
 import com.challenge.wc.model.wcCommand;
 
 public class wcParser {
-    public static wcCommand parserInputCommand(String inputCommand) {
-        String[] strs = inputCommand.split(" ");
-        if (strs.length < 2 || strs.length > 3) {
-            throw new RuntimeException("Incorrect command found");
+    public static wcCommand parseInputCommand(String[] inputCommand) {
+        String command;
+        String option;
+        String file;
+
+        if (inputCommand.length == 0) {
+            throw new RuntimeException("No command found");
         }
 
-        String optionsStr = strs[1];
-        String option = "";
-        if (optionsStr.charAt(0) == '-') {
-            option = "" + optionsStr.charAt(1);
+        command = inputCommand[0];
+        if (!command.equals(wcConstants.CCWC)) {
+            throw new RuntimeException("Incorrect command (use ccwc)");
         }
 
-        String file = "";
-        if (strs.length > 2) {
-            file = strs[2];
+        if (inputCommand.length > 1 && inputCommand[1].charAt(0) == '-') {
+            option = inputCommand[1].charAt(1) + "";
         } else {
-            file = strs[1];
+            option = wcConstants.DEFAULT_OPTION;
         }
 
-        return new wcCommand(strs[0], option, file);
+        if (inputCommand.length == 2 && inputCommand[1].charAt(0) != '-') {
+            file = inputCommand[1];
+        } else if (inputCommand.length == 3) {
+            file = inputCommand[2];
+        } else {
+            file = null;
+        }
+
+        return new wcCommand(command, option, file);
     }
 }
