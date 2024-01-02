@@ -11,19 +11,12 @@ import java.io.InputStreamReader;
 
 public class wcMain {
     public static void main(String[] args) {
-        System.out.println("Input your command... e.g. [ccwc -c test.txt]");
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            String input = br.readLine();
-            if (wcValidator.validateInputCommand(input)) {
-                wcCommand tokenizedCommand = wcParser.parserInputCommand(input);
-                wcExecutor wcExecutor = new wcExecutor(tokenizedCommand);
-                wcExecutor.executeCommand();
-            } else {
-                System.out.println("Wrong command. Please check");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (wcValidator.validateInputCommand(args)) {
+            wcCommand tokenizedCommand = wcParser.parserInputCommand(args);
+            wcExecutor wcExecutor = new wcExecutor(tokenizedCommand);
+            wcExecutor.executeCommand();
+        } else {
+            System.out.println("Wrong command. Please check");
         }
     }
 }
